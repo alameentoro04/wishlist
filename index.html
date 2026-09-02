@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wishlist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #2b1620;
+        --wine: #4a1d2e;
+        --wine-soft: #6b2e45;
+        --rose: #c97b84;
+        --rose-soft: #e8c4c8;
+        --gold: #b08b2e;
+        --parchment: #fbf2e9;
+        --parchment-dim: #f3e4d3;
+        --card: #fffdfb;
+        --line: rgba(43, 22, 32, 0.14);
+        --line-soft: rgba(43, 22, 32, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--parchment);
+        color: var(--ink);
+        font-family: "Work Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      h1,
+      h2,
+      h3,
+      .serif {
+        font-family: "Fraunces", serif;
+      }
+
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 20px 100px;
+      }
+
+      /* Header */
+      header {
+        background: linear-gradient(160deg, var(--wine), var(--wine-soft));
+        color: var(--parchment);
+        padding: 48px 20px 56px;
+        margin-bottom: -28px;
+      }
+      header .inner {
+        max-width: 680px;
+        margin: 0 auto;
+      }
+      header h1 {
+        font-size: clamp(32px, 6vw, 44px);
+        font-weight: 500;
+        margin: 0 0 8px;
+        letter-spacing: -0.01em;
+      }
+      header p {
+        margin: 0;
+        color: var(--rose-soft);
+        font-size: 15px;
+        max-width: 46ch;
+        line-height: 1.5;
+      }
+      header .stat {
+        margin-top: 24px;
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      header .stat div {
+        font-size: 13px;
+        color: var(--rose-soft);
+      }
+      header .stat strong {
+        display: block;
+        font-family: "Fraunces", serif;
+        font-size: 22px;
+        font-weight: 500;
+        color: #fff;
+      }
+
+      /* Add form card */
+      .add-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: 0 12px 30px -18px rgba(43, 22, 32, 0.35);
+        padding: 4px;
+        position: relative;
+        z-index: 2;
+      }
+      .add-toggle {
+        width: 100%;
+        background: none;
+        border: none;
+        text-align: left;
+        padding: 16px 18px;
+        font-family: "Work Sans", sans-serif;
+        font-size: 15.5px;
+        font-weight: 500;
+        color: var(--wine);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .add-toggle .plus {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--rose-soft);
+        color: var(--wine);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        transition: transform 0.25s ease;
+      }
+      .add-card.open .plus {
+        transform: rotate(45deg);
+      }
+      .add-form {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+      .add-card.open .add-form {
+        max-height: 900px;
+      }
+      .add-form-inner {
+        padding: 4px 18px 18px;
+        display: grid;
+        gap: 12px;
+      }
+      .row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      label {
+        font-size: 12.5px;
+        color: var(--wine);
+        font-weight: 500;
+        display: block;
+        margin-bottom: 5px;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        font-family: "Work Sans", sans-serif;
+        font-size: 14.5px;
+        padding: 10px 12px;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        background: var(--parchment);
+        color: var(--ink);
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--rose);
+        box-shadow: 0 0 0 3px rgba(201, 123, 132, 0.18);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 56px;
+      }
+      .submit-btn {
+        justify-self: start;
+        background: var(--wine);
+        color: #fff;
+        border: none;
+        padding: 11px 22px;
+        border-radius: 999px;
+        font-family: "Work Sans", sans-serif;
+        font-size: 14.5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .submit-btn:hover {
+        background: var(--wine-soft);
+      }
+
+      /* Priority groups */
+      .group {
+        margin-top: 38px;
+      }
+      .group-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .group-title .heart {
+        color: var(--rose);
+        font-size: 13px;
+      }
+      .group-title h2 {
+        font-size: 19px;
+        font-weight: 500;
+        margin: 0;
+        color: var(--wine);
+      }
+      .group-title .rule {
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+      .group-title .count {
+        font-size: 12.5px;
+        color: var(--ink);
+        opacity: 0.5;
+      }
+
+      .empty-note {
+        font-size: 13.5px;
+        color: var(--ink);
+        opacity: 0.5;
+        padding: 6px 2px 0;
+      }
+
+      /* Archive (bought items) */
+      .archive {
+        margin-top: 44px;
+      }
+      .archive-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0 0 16px;
+        font-family: "Work Sans", sans-serif;
+      }
+      .archive-toggle .heart {
+        color: var(--gold);
+        font-size: 13px;
+      }
+      .archive-toggle #archiveLabel {
+        font-family: "Fraunces", serif;
+        font-size: 19px;
+        font-weight: 500;
+        color: var(--wine);
+      }
+      .archive-toggle .rule {
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+      .archive-toggle .chevron {
+        font-size: 13px;
+        color: var(--ink);
+        opacity: 0.5;
+        transition: transform 0.25s ease;
+      }
+      .archive.open .chevron {
+        transform: rotate(180deg);
+      }
+      .archive-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+      .archive.open .archive-body {
+        max-height: 4000px;
+      }
+
+      /* Item card */
+      .item {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 18px;
+        margin-bottom: 12px;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .item.bought {
+        opacity: 0.55;
+      }
+      .item.removing {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+      .item-top {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .tick {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid var(--rose);
+        background: none;
+        cursor: pointer;
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        transition: background 0.2s ease, border-color 0.2s ease;
+      }
+      .tick.checked {
+        background: var(--gold);
+        border-color: var(--gold);
+      }
+      .tick svg {
+        width: 13px;
+        height: 13px;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+      .tick.checked svg {
+        opacity: 1;
+      }
+
+      .item-main {
+        flex: 1;
+        min-width: 0;
+      }
+      .item-name-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+        flex-wrap: wrap;
+      }
+      .item-name {
+        font-family: "Fraunces", serif;
+        font-size: 18px;
+        font-weight: 500;
+      }
+      .item.bought .item-name {
+        text-decoration: line-through;
+        text-decoration-color: var(--rose);
+      }
+      .item-price {
+        font-size: 15px;
+        color: var(--wine);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .item-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .tag {
+        font-size: 11.5px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--parchment-dim);
+        color: var(--wine);
+      }
+      .tag-overdue {
+        background: rgba(138, 59, 59, 0.14);
+        color: #8a3b3b;
+      }
+      .item-note {
+        font-size: 13.5px;
+        color: var(--ink);
+        opacity: 0.75;
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+      .item-link {
+        font-size: 13px;
+        color: var(--rose);
+        text-decoration: underline;
+        margin-top: 6px;
+        display: inline-block;
+      }
+
+      .progress-wrap {
+        margin-top: 12px;
+      }
+      .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--ink);
+        opacity: 0.7;
+        margin-bottom: 5px;
+      }
+      .progress-track {
+        height: 6px;
+        background: var(--parchment-dim);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--gold);
+        border-radius: 99px;
+        transition: width 0.5s ease;
+      }
+
+      .item-actions {
+        display: flex;
+        gap: 14px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .link-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        font-family: "Work Sans", sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--wine);
+        opacity: 0.7;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .link-btn:hover {
+        opacity: 1;
+      }
+      .link-btn.danger {
+        color: #8a3b3b;
+      }
+
+      .pay-form {
+        display: none;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .pay-form.open {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .pay-form input {
+        width: auto;
+        flex: 1;
+        min-width: 100px;
+      }
+      .pay-form button {
+        background: var(--rose);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .pay-history {
+        display: none;
+        margin-top: 10px;
+        border-top: 1px dashed var(--line);
+        padding-top: 10px;
+      }
+      .pay-history.open {
+        display: block;
+      }
+      .pay-entry {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12.5px;
+        padding: 3px 0;
+        color: var(--ink);
+        opacity: 0.8;
+      }
+
+      footer {
+        text-align: center;
+        padding: 40px 20px;
+        font-size: 12.5px;
+        color: var(--ink);
+        opacity: 0.4;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--wine);
+        color: #fff;
+        padding: 11px 20px;
+        border-radius: 999px;
+        font-size: 13.5px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: 50;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      @media (max-width: 480px) {
+        .row2 {
+          grid-template-columns: 1fr;
+        }
+        header {
+          padding: 38px 18px 48px;
+        }
+      }
+
+      .setup-banner {
+        background: #8a3b3b;
+        color: #fff;
+        font-size: 13px;
+        text-align: center;
+        padding: 10px 16px;
+        line-height: 1.5;
+      }
+      .setup-banner code {
+        background: rgba(255, 255, 255, 0.18);
+        padding: 1px 6px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="setupBanner" class="setup-banner" style="display: none">
+      This page needs your Firebase config pasted into
+      <code>index.html</code> before it will work. See the setup notes.
+    </div>
+
+    <header>
+      <div class="inner">
+        <h1 id="pageTitle">For You ♥</h1>
+        <p id="pageSubtitle">
+          Everything I've got my eye on, in the order I want it.
+        </p>
+        <div class="stat">
+          <div><strong id="statTotal">0</strong>on the list</div>
+          <div><strong id="statBought">0</strong>bought</div>
+          <div><strong id="statSaved">₦0</strong>put toward the rest</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="add-card" id="addCard">
+        <button class="add-toggle" id="addToggle">
+          <span>Add something you want</span>
+          <span class="plus">+</span>
+        </button>
+        <div class="add-form">
+          <form id="itemForm" class="add-form-inner">
+            <div>
+              <label for="f-name">What is it?</label>
+              <input
+                id="f-name"
+                required
+                placeholder="e.g. Brown leather tote bag"
+              />
+            </div>
+            <div class="row2">
+              <div>
+                <label for="f-price">Price (₦)</label>
+                <input
+                  id="f-price"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="35000"
+                />
+              </div>
+              <div>
+                <label for="f-priority">Priority</label>
+                <select id="f-priority">
+                  <option value="1">Need it now</option>
+                  <option value="2" selected>Would love it</option>
+                  <option value="3">Someday</option>
+                </select>
+              </div>
+            </div>
+            <div class="row2">
+              <div>
+                <label for="f-occasion">Occasion (optional)</label>
+                <select id="f-occasion">
+                  <option value="">Just because</option>
+                  <option value="Birthday">Birthday</option>
+                  <option value="Eid">Eid</option>
+                  <option value="Anko">Anko</option>
+                  <option value="Anniversary">Anniversary</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="f-link">Link (optional)</label>
+                <input id="f-link" type="url" placeholder="https://..." />
+              </div>
+            </div>
+            <div class="row2">
+              <div>
+                <label for="f-deadline">Needed by (optional)</label>
+                <input id="f-deadline" type="date" />
+              </div>
+              <div></div>
+            </div>
+            <div>
+              <label for="f-note">Note (optional)</label>
+              <textarea
+                id="f-note"
+                placeholder="Color, size, where you saw it..."
+              ></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Add to list</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="groups"></div>
+
+      <div class="archive" id="archiveSection" style="display: none">
+        <button class="archive-toggle" id="archiveToggle">
+          <span class="heart">♥</span>
+          <span id="archiveLabel">Got these</span>
+          <div class="rule"></div>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="archive-body" id="archiveBody"></div>
+      </div>
+    </div>
+
+    <footer>Made with love. Updates instantly for both of you.</footer>
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        onSnapshot,
+        doc,
+        updateDoc,
+        deleteDoc,
+        arrayUnion,
+        serverTimestamp,
+        query,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      // ── Personalize these ──────────────────────────────────────────
+      const HER_NAME = "Maryam's Wishlsit"; // e.g. "Amina's Wishlist" — leave blank to keep "For You ♥"
+      const SUBTITLE = "From Your Support System"; // optional custom subtitle
+      const CURRENCY = "₦";
+
+      // ── Paste your Firebase config here (see setup notes) ─────────
+      const firebaseConfig = {
+        apiKey: "AIzaSyB26QAkq119yUqAlrTNzS-QTpxMdbJMa-A",
+
+        authDomain: "our-wishlist-4fc9f.firebaseapp.com",
+
+        projectId: "our-wishlist-4fc9f",
+
+        storageBucket: "our-wishlist-4fc9f.firebasestorage.app",
+
+        messagingSenderId: "695700053642",
+
+        appId: "1:695700053642:web:7687f9773ccb1e482d5773",
+
+        measurementId: "G-V2XBWKSY14",
+      };
+      // ────────────────────────────────────────────────────────────
+
+      // ── WhatsApp notifications (optional — see setup notes) ───────
+      // Leave WHATSAPP_PHONE blank to turn this off entirely.
+      const WHATSAPP_PHONE = "+2347080494185"; // your WhatsApp number with country code, e.g. "+2348012345678"
+      const WHATSAPP_APIKEY = ""; // from CallMeBot, see setup notes
+      const REMINDER_DAYS_BEFORE = 7; // send a reminder once an item's deadline is this many days away
+      // ────────────────────────────────────────────────────────────
+
+      function notifyWhatsApp(text) {
+        if (!WHATSAPP_PHONE || !WHATSAPP_APIKEY) return;
+        const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(
+          WHATSAPP_PHONE
+        )}&text=${encodeURIComponent(text)}&apikey=${encodeURIComponent(
+          WHATSAPP_APIKEY
+        )}`;
+        // Fire-and-forget via an image beacon so it isn't blocked by CORS.
+        const beacon = new Image();
+        beacon.src = url;
+      }
+
+      if (HER_NAME) document.getElementById("pageTitle").textContent = HER_NAME;
+      if (SUBTITLE)
+        document.getElementById("pageSubtitle").textContent = SUBTITLE;
+
+      let db;
+      try {
+        if (firebaseConfig.apiKey.startsWith("PASTE_"))
+          throw new Error("not configured");
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+      } catch (e) {
+        document.getElementById("setupBanner").style.display = "block";
+      }
+
+      const itemsCol = db ? collection(db, "items") : null;
+      const groupsEl = document.getElementById("groups");
+      const toastEl = document.getElementById("toast");
+
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        setTimeout(() => toastEl.classList.remove("show"), 2200);
+      }
+
+      function money(n) {
+        n = Number(n) || 0;
+        return CURRENCY + n.toLocaleString("en-NG");
+      }
+
+      function formatDeadline(dateStr) {
+        if (!dateStr) return "";
+        const d = new Date(dateStr + "T00:00:00");
+        const opts = { day: "numeric", month: "short" };
+        if (d.getFullYear() !== new Date().getFullYear()) opts.year = "numeric";
+        return d.toLocaleDateString("en-GB", opts);
+      }
+
+      function deadlineInfo(dateStr) {
+        if (!dateStr) return null;
+        const d = new Date(dateStr + "T00:00:00");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const daysLeft = Math.round((d - today) / 86400000);
+        return { label: formatDeadline(dateStr), daysLeft };
+      }
+
+      function checkDeadlineReminders(items) {
+        if (!WHATSAPP_PHONE || !WHATSAPP_APIKEY) return;
+        const todayStr = new Date().toISOString().slice(0, 10);
+        items.forEach(async (it) => {
+          if (it.bought || !it.deadline) return;
+          const info = deadlineInfo(it.deadline);
+          if (info.daysLeft < 0 || info.daysLeft > REMINDER_DAYS_BEFORE) return;
+          if (it.lastReminded === todayStr) return;
+          const msg =
+            info.daysLeft === 0
+              ? `Reminder: "${it.name}" is needed today (by ${info.label}).`
+              : `Reminder: "${it.name}" is needed in ${info.daysLeft} day${
+                  info.daysLeft === 1 ? "" : "s"
+                } (by ${info.label}).`;
+          notifyWhatsApp(msg);
+          try {
+            await updateDoc(doc(db, "items", it.id), {
+              lastReminded: todayStr,
+            });
+          } catch (e) {}
+        });
+      }
+
+      // ── Add item form ──────────────────────────────────────────
+      const addCard = document.getElementById("addCard");
+      document.getElementById("addToggle").addEventListener("click", () => {
+        addCard.classList.toggle("open");
+      });
+
+      document
+        .getElementById("itemForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!db) {
+            toast("Set up Firebase first — see banner above.");
+            return;
+          }
+          const name = document.getElementById("f-name").value.trim();
+          if (!name) return;
+          const priorityVal = Number(
+            document.getElementById("f-priority").value
+          );
+          const priceVal =
+            Number(document.getElementById("f-price").value) || 0;
+          const deadlineVal = document.getElementById("f-deadline").value; // "" or "YYYY-MM-DD"
+          const payload = {
+            name,
+            price: priceVal,
+            priority: priorityVal,
+            occasion: document.getElementById("f-occasion").value,
+            link: document.getElementById("f-link").value.trim(),
+            note: document.getElementById("f-note").value.trim(),
+            deadline: deadlineVal || null,
+            bought: false,
+            payments: [],
+            createdAt: serverTimestamp(),
+          };
+          await addDoc(itemsCol, payload);
+          e.target.reset();
+          document.getElementById("f-priority").value = "2";
+          addCard.classList.remove("open");
+          toast("Added to the list ♥");
+
+          const priorityLabel =
+            GROUP_DEFS.find((g) => g.key === priorityVal)?.title || "";
+          let msg = `New wishlist item: ${name}`;
+          if (priceVal) msg += ` — ${money(priceVal)}`;
+          if (priorityLabel) msg += ` (${priorityLabel})`;
+          if (deadlineVal) msg += `, needed by ${formatDeadline(deadlineVal)}`;
+          notifyWhatsApp(msg);
+        });
+
+      // ── Render ──────────────────────────────────────────────────
+      const GROUP_DEFS = [
+        { key: 1, title: "Need it now" },
+        { key: 2, title: "Would love it" },
+        { key: 3, title: "Someday" },
+      ];
+
+      function paidTotal(payments) {
+        return (payments || []).reduce(
+          (sum, p) => sum + (Number(p.amount) || 0),
+          0
+        );
+      }
+
+      function renderItem(id, d) {
+        const paid = paidTotal(d.payments);
+        const price = Number(d.price) || 0;
+        const pct =
+          price > 0 ? Math.min(100, Math.round((paid / price) * 100)) : 0;
+        const dl = deadlineInfo(d.deadline);
+
+        const el = document.createElement("div");
+        el.className = "item" + (d.bought ? " bought" : "");
+        el.dataset.id = id;
+
+        el.innerHTML = `
+      <div class="item-top">
+        <button class="tick ${
+          d.bought ? "checked" : ""
+        }" title="Mark as bought">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="item-main">
+          <div class="item-name-row">
+            <div class="item-name">${escapeHtml(d.name)}</div>
+            ${price ? `<div class="item-price">${money(price)}</div>` : ""}
+          </div>
+          <div class="item-tags">
+            ${
+              d.occasion
+                ? `<span class="tag">${escapeHtml(d.occasion)}</span>`
+                : ""
+            }
+            ${
+              dl
+                ? `<span class="tag ${
+                    dl.daysLeft < 0 && !d.bought ? "tag-overdue" : ""
+                  }">${!d.bought && dl.daysLeft < 0 ? "Was due" : "By"} ${
+                    dl.label
+                  }</span>`
+                : ""
+            }
+          </div>
+          ${d.note ? `<div class="item-note">${escapeHtml(d.note)}</div>` : ""}
+          ${
+            d.link
+              ? `<a class="item-link" href="${escapeAttr(
+                  d.link
+                )}" target="_blank" rel="noopener">View item</a>`
+              : ""
+          }
+          ${
+            price > 0 && !d.bought
+              ? `
+            <div class="progress-wrap">
+              <div class="progress-labels"><span>${money(
+                paid
+              )} put aside</span><span>${money(
+                  Math.max(price - paid, 0)
+                )} to go</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+            </div>`
+              : ""
+          }
+          <div class="item-actions">
+            ${
+              price > 0 && !d.bought
+                ? `<button class="link-btn pay-toggle">+ Add payment</button>`
+                : ""
+            }
+            ${
+              d.payments && d.payments.length
+                ? `<button class="link-btn hist-toggle">Payment history (${d.payments.length})</button>`
+                : ""
+            }
+            <button class="link-btn danger del-btn">Remove</button>
+          </div>
+          <div class="pay-form">
+            <input type="number" min="0" step="1" class="pay-amount" placeholder="Amount sent" />
+            <input type="text" class="pay-note" placeholder="Note (optional)" />
+            <button class="pay-submit" type="button">Log</button>
+          </div>
+          <div class="pay-history">
+            ${(d.payments || [])
+              .slice()
+              .reverse()
+              .map(
+                (p) =>
+                  `<div class="pay-entry"><span>${escapeHtml(
+                    p.note || "Payment"
+                  )}</span><span>${money(p.amount)}</span></div>`
+              )
+              .join("")}
+          </div>
+        </div>
+      </div>
+    `;
+
+        el.querySelector(".tick").addEventListener("click", async () => {
+          const nowBought = !d.bought;
+          await updateDoc(doc(db, "items", id), {
+            bought: nowBought,
+            boughtAt: nowBought ? serverTimestamp() : null,
+          });
+          toast(nowBought ? "Marked as bought ♥" : "Moved back to the list");
+        });
+
+        el.querySelector(".del-btn").addEventListener("click", async () => {
+          if (!confirm(`Remove "${d.name}" from the list?`)) return;
+          el.classList.add("removing");
+          setTimeout(() => deleteDoc(doc(db, "items", id)), 300);
+        });
+
+        const payToggle = el.querySelector(".pay-toggle");
+        const payForm = el.querySelector(".pay-form");
+        if (payToggle)
+          payToggle.addEventListener("click", () =>
+            payForm.classList.toggle("open")
+          );
+
+        const histToggle = el.querySelector(".hist-toggle");
+        const histBox = el.querySelector(".pay-history");
+        if (histToggle)
+          histToggle.addEventListener("click", () =>
+            histBox.classList.toggle("open")
+          );
+
+        const paySubmit = el.querySelector(".pay-submit");
+        if (paySubmit)
+          paySubmit.addEventListener("click", async () => {
+            const amt = Number(el.querySelector(".pay-amount").value);
+            if (!amt || amt <= 0) return;
+            const note = el.querySelector(".pay-note").value.trim();
+            await updateDoc(doc(db, "items", id), {
+              payments: arrayUnion({
+                amount: amt,
+                note,
+                date: new Date().toISOString(),
+              }),
+            });
+            toast(`Logged ${money(amt)} toward "${d.name}"`);
+          });
+
+        return el;
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c])
+        );
+      }
+      function escapeAttr(s) {
+        return escapeHtml(s);
+      }
+
+      document.getElementById("archiveToggle").addEventListener("click", () => {
+        document.getElementById("archiveSection").classList.toggle("open");
+      });
+
+      function renderAll(items) {
+        groupsEl.innerHTML = "";
+        let totalCount = 0,
+          boughtCount = 0,
+          totalSaved = 0;
+
+        GROUP_DEFS.forEach((g) => {
+          const groupItems = items.filter(
+            (it) => it.priority === g.key && !it.bought
+          );
+          totalCount += groupItems.length;
+
+          const section = document.createElement("div");
+          section.className = "group";
+          section.innerHTML = `
+        <div class="group-title">
+          <span class="heart">♥</span>
+          <h2>${g.title}</h2>
+          <div class="rule"></div>
+          <span class="count">${groupItems.length}</span>
+        </div>
+      `;
+
+          if (groupItems.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "empty-note";
+            empty.textContent = "Nothing here yet.";
+            section.appendChild(empty);
+          } else {
+            groupItems
+              .sort((a, b) => (b._ts || 0) - (a._ts || 0))
+              .forEach((it) => {
+                totalSaved += paidTotal(it.payments);
+                section.appendChild(renderItem(it.id, it));
+              });
+          }
+          groupsEl.appendChild(section);
+        });
+
+        const boughtItems = items
+          .filter((it) => it.bought)
+          .sort((a, b) => (b._boughtTs || 0) - (a._boughtTs || 0));
+        boughtCount = boughtItems.length;
+        boughtItems.forEach((it) => (totalSaved += paidTotal(it.payments)));
+
+        const archiveSection = document.getElementById("archiveSection");
+        const archiveBody = document.getElementById("archiveBody");
+        const archiveLabel = document.getElementById("archiveLabel");
+        if (boughtItems.length === 0) {
+          archiveSection.style.display = "none";
+        } else {
+          archiveSection.style.display = "block";
+          archiveLabel.textContent = `Got these (${boughtItems.length})`;
+          archiveBody.innerHTML = "";
+          boughtItems.forEach((it) =>
+            archiveBody.appendChild(renderItem(it.id, it))
+          );
+        }
+
+        document.getElementById("statTotal").textContent = totalCount;
+        document.getElementById("statBought").textContent = boughtCount;
+        document.getElementById("statSaved").textContent = money(totalSaved);
+      }
+
+      if (db) {
+        const q = query(itemsCol, orderBy("createdAt", "desc"));
+        onSnapshot(q, (snap) => {
+          const items = [];
+          snap.forEach((docSnap) => {
+            const d = docSnap.data();
+            items.push({
+              id: docSnap.id,
+              ...d,
+              _ts: d.createdAt?.toMillis?.() || 0,
+              _boughtTs: d.boughtAt?.toMillis?.() || 0,
+            });
+          });
+          renderAll(items);
+          checkDeadlineReminders(items);
+        });
+      } else {
+        renderAll([]);
+      }
+    </script>
+  </body>
+</html>
